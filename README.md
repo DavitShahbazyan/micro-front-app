@@ -158,11 +158,140 @@ The applications use hot module replacement (HMR) for fast development. Changes 
 
 ## Production Deployment
 
-Each application can be deployed independently:
-- Shared: Deploy to any server, expose on port 3002
-- Remote: Deploy to any server, expose on port 3001
-- Host: Deploy to any server, expose on port 3000
+### Important: Workspaces are for Local Development Only
 
-Configure URLs via environment variables:
+**Workspaces** (`package.json` workspaces) are only used for **local development convenience**. In production, each application is deployed as a **standalone project** on separate servers. Each app has its own `package.json` with all required dependencies.
+
+### Deployment Architecture
+
+Each application can be deployed independently to different servers:
+
+```
+Production Servers:
+├── shared-server.com:3002    # Shared components
+├── remote-server.com:3001    # Remote app  
+└── host-server.com:3000      # Host app
+```
+
+### Step-by-Step Deployment
+
+#### 1. Deploy Shared App
+
+**On Shared Server:**
+```bash
+# Copy shared folder to server
+cd shared
+
+# Install dependencies (standalone, no workspace needed)
+npm install
+
+# Build for production
+npm run build:webpack
+
+# Serve (or use your preferred server like nginx, PM2, Docker)
+npm run serve
+# Or configure nginx, PM2, Docker, etc.
+```
+
+**Required files on server:**
+- `shared/` folder with all contents
+- `build-config/` folder (for webpack.base.js)
+- `package.json` and `webpack.config.js`
+
+**Environment:**
+- Expose on port 3002 (or configure via your server)
+- Ensure CORS headers are enabled
+
+#### 2. Deploy Remote App
+
+**On Remote Server:**
+```bash
+# Copy apps/remote folder to server
+cd apps/remote
+
+# Install dependencies (standalone)
+npm install
+
+# Build for production
+npm run build
+
+# Configure shared URL (if different from localhost)
+export SHARED_URL=https://shared-server.com:3002
+
+# Serve
+npm run serve
+# Or use nginx, PM2, Docker, etc.
+```
+
+**Required files on server:**
+- `apps/remote/` folder with all contents
+- `build-config/` folder (for webpack.base.js)
+- `package.json`
+
+**Environment variables:**
 - `SHARED_URL` - URL of shared app (default: http://localhost:3002)
+
+#### 3. Deploy Host App
+
+**On Host Server:**
+```bash
+# Copy apps/host folder to server
+cd apps/host
+
+# Install dependencies (standalone)
+npm install
+
+# Build for production
+npm run build
+
+# Configure remote and shared URLs
+export REMOTE_URL=https://remote-server.com:3001
+export SHARED_URL=https://shared-server.com:3002
+
+# Serve
+npm run serve
+# Or use nginx, PM2, Docker, etc.
+```
+
+**Required files on server:**
+- `apps/host/` folder with all contents
+- `build-config/` folder (for webpack.base.js)
+- `package.json` and `webpack.config.js`
+
+**Environment variables:**
 - `REMOTE_URL` - URL of remote app (default: http://localhost:3001)
+- `SHARED_URL` - URL of shared app (default: http://localhost:3002)
+
+### Important Notes
+
+1. **Build Config Dependency**: Each app needs access to `build-config/webpack.base.js`. Options:
+   - Copy `build-config/` folder to each server
+   - Publish `build-config` as npm package
+   - Copy webpack configs directly into each app folder
+
+2. **CORS Configuration**: Ensure all servers have CORS enabled for Module Federation to work:
+   ```javascript
+   headers: {
+     'Access-Control-Allow-Origin': '*',
+   }
+   ```
+
+3. **HTTPS in Production**: Use HTTPS URLs in production:
+   ```bash
+   export SHARED_URL=https://shared.yourdomain.com
+   export REMOTE_URL=https://remote.yourdomain.com
+   ```
+
+4. **No Workspace Needed**: In production, each app is completely independent. No need for root `package.json` or workspaces.
+
+### Alternative: Copy Build Config to Each App
+
+If you want to avoid copying `build-config/` folder, you can copy `webpack.base.js` into each app:
+
+```bash
+# In each app folder
+cp ../../build-config/webpack.base.js ./webpack.base.js
+
+# Update webpack.config.js to use local path:
+const createWebpackConfig = require('./webpack.base');
+```
