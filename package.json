@@ -1,0 +1,29 @@
+{
+  "name": "micro-front-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "shared"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm run start:remote\" \"npm run start:host\"",
+    "start:host": "npm run start --workspace=apps/host",
+    "start:remote": "npm run start --workspace=apps/remote",
+    "start:all": "concurrently -n \"REMOTE,HOST\" -c \"cyan,magenta\" \"npm run start:remote\" \"npm run start:host\"",
+    "build": "npm run build:shared && npm run build --workspaces --if-present",
+    "build:shared": "npm run build --workspace=shared",
+    "build:host": "npm run build --workspace=apps/host",
+    "build:remote": "npm run build --workspace=apps/remote",
+    "build:watch:shared": "npm run build:watch --workspace=shared",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "concurrently": "^8.2.2"
+  }
+}
+

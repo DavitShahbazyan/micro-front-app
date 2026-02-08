@@ -1,0 +1,38 @@
+{
+  "name": "@micro-front-app/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./components/Button": {
+      "import": "./dist/components/Button/index.js",
+      "types": "./dist/components/Button/index.d.ts"
+    },
+    "./components/Card": {
+      "import": "./dist/components/Card/index.js",
+      "types": "./dist/components/Card/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && npm run copy:css",
+    "build:watch": "tsc -p tsconfig.build.json --watch",
+    "copy:css": "node ../../build-config/copy-css.js",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.2"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
+
