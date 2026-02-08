@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config ../../build-config/webpack.remote.config.js",
-    "build": "webpack --config ../../build-config/webpack.remote.config.js --mode production"
+    "start": "webpack serve --config webpack.config.js",
+    "build": "webpack --config webpack.config.js --mode production"
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -106,10 +106,14 @@ npm run build:watch:shared
    - Can be built independently as a package
    - Build output: `shared/dist/` (JS, TypeScript declarations, CSS)
 
-4. **Build Configuration** (`build-config/`):
-   - Shared webpack configurations (JavaScript)
+4. **Build Configuration**:
+   - **Base webpack config** (`build-config/webpack.base.js`) - Reusable base configuration
+   - **Host config** (`apps/host/webpack.config.js`) - Uses base config with host-specific parameters
+   - **Remote config** (`apps/remote/webpack.config.js`) - Uses base config with remote-specific parameters
    - Module Federation setup
    - Development and production builds
+   - DRY (Don't Repeat Yourself) principle - single source of truth for webpack config
+   - Each app has its own webpack config in its folder for better organization
 
 ## Technologies
 
