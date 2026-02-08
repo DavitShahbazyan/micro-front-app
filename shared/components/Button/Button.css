@@ -32,7 +32,8 @@
   color: white;
 }
 
-.shared-button--secondary:hover:not(:disabled) {
+.shared-button--
+:hover:not(:disabled) {
   background-color: #545b62;
 }
 

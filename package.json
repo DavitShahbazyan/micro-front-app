@@ -8,22 +8,18 @@
     "shared"
   ],
   "scripts": {
-    "start": "concurrently \"npm run start:remote\" \"npm run start:host\"",
-    "start:host": "npm run start --workspace=apps/host",
-    "start:remote": "npm run start --workspace=apps/remote",
-    "start:all": "concurrently -n \"REMOTE,HOST\" -c \"cyan,magenta\" \"npm run start:remote\" \"npm run start:host\"",
+    "start": "concurrently -n \"SHARED,REMOTE,HOST\" -c \"green,cyan,magenta\" \"npm run start --workspace=shared\" \"npm run start --workspace=apps/remote\" \"npm run start --workspace=apps/host\"",
     "build": "npm run build:shared && npm run build --workspaces --if-present",
-    "build:shared": "npm run build --workspace=shared",
+    "build:shared": "npm run build --workspace=shared && npm run build:webpack --workspace=shared",
     "build:host": "npm run build --workspace=apps/host",
     "build:remote": "npm run build --workspace=apps/remote",
-    "build:watch:shared": "npm run build:watch --workspace=shared",
-    "install:all": "npm install"
+    "serve": "concurrently -n \"SHARED,REMOTE,HOST\" -c \"green,cyan,magenta\" \"npm run serve --workspace=shared\" \"npm run serve --workspace=apps/remote\" \"npm run serve --workspace=apps/host\""
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "serve": "^14.2.5"
   }
 }
-

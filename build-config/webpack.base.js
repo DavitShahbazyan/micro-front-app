@@ -48,12 +48,16 @@ module.exports = (options = {}) => {
     };
 
     // Build plugins array
-    const plugins = [
-      new HtmlWebpackPlugin({
+    const plugins = [];
+    
+    // Add HtmlWebpackPlugin only if template is provided
+    if (htmlTemplate) {
+      plugins.push(new HtmlWebpackPlugin({
         template: htmlTemplate,
-      }),
-      new webpack.HotModuleReplacementPlugin(),
-    ];
+      }));
+    }
+    
+    plugins.push(new webpack.HotModuleReplacementPlugin());
 
     // Add ModuleFederationPlugin if name is provided
     if (name) {

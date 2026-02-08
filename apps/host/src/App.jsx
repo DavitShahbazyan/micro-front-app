@@ -1,6 +1,14 @@
 import React, { Suspense } from 'react';
-import { Button, Card } from '../../../shared';
 import './App.css';
+
+// Lazy load shared components from Module Federation
+const Button = React.lazy(() => 
+  import('shared/Button').then((module) => ({ default: module.Button || module.default }))
+);
+
+const Card = React.lazy(() => 
+  import('shared/Card').then((module) => ({ default: module.Card || module.default }))
+);
 
 // Lazy load remote components
 const RemoteButton = React.lazy(() => 
@@ -21,13 +29,15 @@ const App = () => {
 
       <main className="app-main">
         <section className="components-section">
-          <h2>Shared Components (from shared package)</h2>
-          <div className="components-grid">
-            <Card title="Shared Card Component">
-              <p>This card component is from the shared package.</p>
-              <Button label="Shared Button" variant="primary" />
-            </Card>
-          </div>
+          <h2>Shared Components (from shared package via Module Federation)</h2>
+          <Suspense fallback={<div>Loading shared components...</div>}>
+            <div className="components-grid">
+              <Card title="Shared Card Component">
+                <p>This card component is from the shared package.</p>
+                <Button label="Shared Button" variant="primary" />
+              </Card>
+            </div>
+          </Suspense>
         </section>
 
         <section className="components-section">
