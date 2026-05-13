@@ -20,7 +20,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && npm run copy:css",
+    "build": "tsc -p tsconfig.build.json && npm run copy:css && npm run build:webpack",
     "build:webpack": "webpack --config webpack.config.js --mode production",
     "start": "webpack serve --config webpack.config.js",
     "serve": "serve -s dist -l 3002",

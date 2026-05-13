@@ -63,21 +63,30 @@ This will start:
 
 ### Building
 
-**Build all applications (including shared):**
+**Build all applications (including shared) - Smart Caching with Turbo:**
 ```bash
 npm run build
 ```
+This uses **Turbo** to build only the packages that have changed, making rebuilds much faster!
 
 **Build specific application:**
 ```bash
-npm run build:shared    # Builds shared (TypeScript + Webpack)
+npm run build:shared    # Builds only shared package
 npm run build:host      # Builds only host app
 npm run build:remote    # Builds only remote app
 ```
 
+**Smart incremental build (rebuild only changed packages):**
+```bash
+npm run build:fast      # Builds only packages changed since Git HEAD
+```
+
 > **Note:** 
-> - `build:shared` runs both TypeScript compilation and Webpack build (for Module Federation)
-> - When you change shared components, you only need to rebuild shared; apps will load the updated components at runtime
+> - Turbo automatically detects which packages have changed
+> - Dependencies are respected (e.g., apps build after shared)
+> - Build outputs are cached for faster subsequent builds
+> - `build:legacy` uses old npm workspaces method (if needed)
+> - When you change shared components, only shared rebuilds; apps load updated components at runtime
 
 ### Serving Production Builds
 
@@ -146,11 +155,36 @@ This serves:
 ## Scripts Reference
 
 - `npm start` - Start all apps in development mode
-- `npm run build` - Build all apps (shared + host + remote)
-- `npm run build:shared` - Build shared (TypeScript + Webpack)
+- `npm run build` - Build all apps using **Turbo** (smart, only changed packages)
+- `npm run build:fast` - Incremental build (only packages changed since Git HEAD)
+- `npm run build:shared` - Build shared package only
 - `npm run build:host` - Build host app only
 - `npm run build:remote` - Build remote app only
 - `npm run serve` - Serve all production builds
+- `npm run clean` - Clean all dist folders and node_modules
+
+## About Turbo
+
+This project uses **Turbo** for smart, incremental builds:
+
+- **Automatic Change Detection**: Only rebuilds packages that have changed
+- **Dependency Aware**: Respects package dependencies (e.g., apps wait for shared to build)
+- **Caching**: Build outputs are cached for faster subsequent builds
+- **Parallel Building**: Multiple packages can build simultaneously when possible
+
+**Example workflow:**
+```bash
+# First build - builds everything
+npm run build
+
+# Make changes only in shared/
+# Second build - only rebuilds shared
+npm run build    # Much faster! ⚡
+
+# Make changes only in apps/host/
+# Third build - only rebuilds host
+npm run build    # Fast again!
+```
 
 ## Development
 
