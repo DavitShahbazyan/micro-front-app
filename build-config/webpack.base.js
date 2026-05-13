@@ -68,11 +68,7 @@ module.exports = (options = {}) => {
         shared: sharedDependencies,
         // Module Federation v2 features
         shareScope: 'default',
-        // Library configuration for better compatibility
-        library: {
-          type: 'var',
-          name: name,
-        },
+        // Library configuration removed for compatibility
       };
 
       // Add exposes if provided
