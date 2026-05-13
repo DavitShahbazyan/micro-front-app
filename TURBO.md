@@ -222,3 +222,6 @@ npm run build
 
 The new way is faster and should be the default.
 
+- Webpack 5.89.0 with Module Federation v2
+- shareScope: 'default' for better dependency sharing
+- library: { type: 'var', name: name } for compatibility

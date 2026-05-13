@@ -33,6 +33,7 @@ micro-front-app/
   - Remote app on port 3001 (JavaScript)
 - **TypeScript**: Shared components use TypeScript
 - **Modern Build**: Webpack 5 with Babel, DRY configuration pattern
+- **Module Federation v2**: Uses Webpack Module Federation v2 with shareScope and library configuration
 
 ## Key Architecture Decisions
 

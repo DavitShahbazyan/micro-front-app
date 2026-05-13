@@ -33,17 +33,19 @@ module.exports = (options = {}) => {
       remotes = {},
     } = moduleFederation;
 
-    // Shared dependencies configuration
+    // Shared dependencies configuration - Module Federation v2
     const sharedDependencies = {
       react: {
         singleton: true,
         requiredVersion: '^18.2.0',
         eager: false,
+        shareScope: 'default',
       },
       'react-dom': {
         singleton: true,
         requiredVersion: '^18.2.0',
         eager: false,
+        shareScope: 'default',
       },
     };
 
@@ -64,6 +66,13 @@ module.exports = (options = {}) => {
       const mfConfig = {
         name,
         shared: sharedDependencies,
+        // Module Federation v2 features
+        shareScope: 'default',
+        // Library configuration for better compatibility
+        library: {
+          type: 'var',
+          name: name,
+        },
       };
 
       // Add exposes if provided
@@ -138,4 +147,3 @@ module.exports = (options = {}) => {
     };
   };
 };
-
